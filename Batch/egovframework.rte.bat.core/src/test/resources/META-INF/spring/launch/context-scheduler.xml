@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       	http://www.springframework.org/schema/beans/spring-beans.xsd
+       	http://www.springframework.org/schema/aop
+ 		http://www.springframework.org/schema/aop/spring-aop.xsd">
+	
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<bean id="cronTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+				<property name="jobDetail" ref="jobDetail" />
+				<property name="startDelay">
+			    	<!-- 5 seconds -->
+					<value>5000</value>
+				</property>
+				<property name="repeatInterval">
+					<!-- repeat every 10 seconds -->
+			    	<value>10000</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>
