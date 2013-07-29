@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+					http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+					http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+	<context:property-placeholder location="classpath:/spring/jdbc.properties"/>
+	<util:properties id="schemaProperties" location="classpath:/spring/jdbc.properties" />	
+
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${driver}"/>
+		<property name="url" value="${dburl}"/>
+		<property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+        <property name="poolPreparedStatements" value="true"/>
+	</bean>
+    
+	<bean name="messageSource" 
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="useCodeAsDefaultMessage">
+			<value>true</value>
+		</property>
+		<property name="basenames">
+			<list>	
+				<value>egovframework/rte/fdl/idgnr/messages/idgnr</value>
+			</list>
+		</property>
+	</bean>	    
+</beans>	

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<bean id="excelService"	class="egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl">
+		<property name="mapClass" value="egovframework.rte.fdl.excel.upload.EgovExcelTestMapping" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="excelBigService"	class="egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl">
+		<property name="mapClass" value="egovframework.rte.fdl.excel.upload.EgovExcelBigTestMapping" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="XSSFexcelService"	class="egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl">
+		<!-- property name="mapClass" value="egovframework.rte.fdl.excel.upload.EgovPOIExcelTestMapping" /-->
+		<property name="mapBeanName" value="mappingBean" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="XSSFexcelBigService"	class="egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl">
+		<property name="mapClass" value="egovframework.rte.fdl.excel.upload.EgovPOIExcelBigTestMapping" />
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	
+	<bean id="mappingBean" class="egovframework.rte.fdl.excel.upload.EgovPOIExcelTestMapping" />
+</beans>

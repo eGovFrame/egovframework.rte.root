@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false"
+	xmlns:log4j='http://jakarta.apache.org/log4j/'>
+	
+	<appender name="sysout" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout"/>
+	</appender>
+
+	<appender name="console" class="org.apache.log4j.ConsoleAppender">
+		<!-- ref.) attr : Encoding, ImmediateFlush, Target, Threshold -->
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="file" class="org.apache.log4j.FileAppender">
+		<!--
+			ref.) attr : Append, Encoding, BufferedIO, BufferSize, File,
+			ImmediateFlush, Threshold
+		-->
+		<param name="File" value="./logs/file/sample.log" />
+		<!-- test 편의를 위해 매번 새로 file 덮어쓰도록 Append false로 설정 -->
+		<param name="Append" value="false" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="mdcFile" class="org.apache.log4j.FileAppender">
+		<param name="File" value="./logs/file/mdcSample.log" />
+		<param name="Append" value="false" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- MDC 관련 패턴 포함 -->
+			<param name="ConversionPattern"
+				value="%d %5p [%c] [%X{class} %X{method} %X{testKey}] %m%n" />
+		</layout>
+	</appender>
+
+	<!-- log4j 1.2 이전 스타일 backup -->
+	<!--
+		<appender name="rollingFile"
+		class="org.apache.log4j.RollingFileAppender"> < ! - - ref.) attr :
+		FileAppender + MaxFileSize, MaxBackupIndex - - > <param name="File"
+		value="./logs/rolling/rollingSample.log" /> <param name="Append"
+		value="true" /> < ! - - suffix : KB, MB, GB default : 10MB - - >
+		<param name="MaxFileSize" value="10KB" /> < ! - - 0 인 경우 backup 없이
+		truncate 됨, default 1, 10 넘지 말것 - - > <param name="MaxBackupIndex"
+		value="1" /> <layout class="org.apache.log4j.PatternLayout"> <param
+		name="ConversionPattern" value="%d %5p [%c] %m%n" /> </layout>
+		</appender>
+	-->
+	<!-- log4j-1.3alpha-8 스타일 - 패키지 변경 및 policy 처리로 구조 변경 됨 -->
+	<appender name="rollingFile" class="org.apache.log4j.rolling.RollingFileAppender">
+		<rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
+			<param name="FileNamePattern" value="./logs/rolling/rollingSample.%i.log" />
+			<param name="MaxIndex" value="3" />
+		</rollingPolicy>
+		<triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+			<param name="MaxFileSize" value="1000" />
+		</triggeringPolicy>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<appender name="dailyRollingFile" class="org.apache.log4j.DailyRollingFileAppender">
+		<!-- ref.) attr : FileAppender + DatePattern -->
+		<param name="File" value="./logs/daily/dailyRollingSample.log" />
+		<param name="Append" value="true" />
+		<!--
+			SimpleDateFormat 을 따름. ex.) .yyyy-ww : 첫날 기준 매주마다, .yyyy-MM-dd-HH-mm
+			: 매분마다
+		-->
+		<param name="DatePattern" value=".yyyy-MM-dd-HH-mm-ss" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+	<!-- jdbc.properties -->
+	<substitutionProperty
+		file="./src/test/resources/META-INF/spring/jdbc.properties" />
+
+	<appender name="DB" class="org.apache.log4j.db.DBAppender">
+		<!-- caller_filename, caller_class, caller_method, caller_line -->
+		<param name="locationInfo" value="true" />
+		<connectionSource class="org.apache.log4j.db.DriverManagerConnectionSource">
+			<param name="driverClass" value="${driver}" />
+			<param name="url" value="${dburl}" />
+			<param name="user" value="${username}" />
+			<param name="password" value="${password}" />
+		</connectionSource>
+	</appender>
+
+	<!--
+		Oracle 인 경우 (ojdbc-14.jar jdbc type 4 thin) getGeneratedKeys 를 실행할 때
+		문제가 발생하므로 useSupportsGetGeneratedKeys flag 에 따라 JDBC3.0 의
+		getGeneratedKeys 를 사용하지 않는 옵션으로 처리 가능한 EgovDBAppender 로 처리
+	-->
+	<appender name="egovDB" class="org.apache.log4j.db.EgovDBAppender">
+		<!-- caller_filename, caller_class, caller_method, caller_line -->
+		<param name="locationInfo" value="true" />
+		<!-- Oracle 인 경우 아래를 false 로 설정 또는 아래 옵션 라인 삭제(기본 false) -->
+		<param name="useSupportsGetGeneratedKeys" value="false" />
+		<connectionSource class="org.apache.log4j.db.DriverManagerConnectionSource">
+			<param name="driverClass" value="${driver}" />
+			<param name="url" value="${dburl}" />
+			<param name="user" value="${username}" />
+			<param name="password" value="${password}" />
+		</connectionSource>
+	</appender>
+
+	<!--
+		Singleton을 구현하고 있으며, spring 의 dataSource bean 을 injection 할 수 있도록
+		Annotation Bean 으로도 설정되어 있어야 함.
+	-->
+	<appender name="pooledDB"
+		class="egovframework.rte.fdl.logging.db.EgovJDBCAppender">
+		<!-- caller_filename, caller_class, caller_method, caller_line -->
+		<param name="locationInfo" value="true" />
+		<param name="sql"
+			value="INSERT INTO logging_event (
+									sequence_number, timestamp, rendered_message,
+									logger_name, level_string, ndc,
+									thread_name, reference_flag,
+									caller_filename, caller_class,
+									caller_method, caller_line) 
+								VALUES 
+									('%X{sequence_number}', '%X{timestamp}', '%X{rendered_message}', 
+									'%X{logger_name}', '%X{level_string}', '%X{ndc}', 
+									'%X{thread_name}', '%X{reference_flag}', 
+									'%X{caller_filename}', '%X{caller_class}', 
+									'%X{caller_method}', '%X{caller_line}')" />
+	</appender>
+
+	<!-- jndi.properties -->
+	<substitutionProperty
+		file="./src/test/resources/META-INF/spring/jndi.properties" />
+		
+	<appender name="jms" class="org.apache.log4j.net.JMSAppender">
+		<param name="InitialContextFactoryName" value="${jeus.java.naming.factory.initial}" />
+		<param name="URLPkgPrefixes" value="${jeus.jndi.jns.url}" />
+		<param name="ProviderURL" value="${jeus.java.naming.provider.url}" />
+		<param name="TopicConnectionFactoryBindingName" value="${jeus.connectionFactory}" />
+		<param name="TopicBindingName" value="${jeus.topic}" />
+		<param name="UserName" value="${jeus.username}" />
+		<param name="Password" value="${jeus.password}" />
+		<param name="LocationInfo" value="true" />
+	</appender>
+
+	<appender name="jmsMessageConsumerFile" class="org.apache.log4j.FileAppender">
+		<param name="File" value="./logs/jmsconsume/jmsSample.log" />
+		<param name="Append" value="false" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%d %5p [%c] [%X{class} %X{method} %X{testKey}] %m%n" />
+		</layout>
+	</appender>
+		
+	<appender name="socket" class="org.apache.log4j.net.SocketAppender">
+		<param name="Threshold" value="ALL" />
+		<!-- 테스트 편의를 위해 같은 machine 에 socket server 를 띄우고 테스트 -->
+		<param name="RemoteHost" value="localhost" />
+		<param name="Port" value="4448" />
+		<param name="ReconnectionDelay" value="5000" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+	
+
+	<!-- smtp.properties -->
+	<substitutionProperty
+		file="./src/test/resources/META-INF/spring/smtp.properties" />
+
+	<!-- 로컬 pc 에 James 메일 서버(servername = woo)를 설치하고 kimth 유저를 생성하여 테스트 하였음. 
+		James 는 pop3 도 지원하므로 outlook 으로 연결하여 kimth 계정의 받은 편지함 확인  
+	-->
+	<appender name="mail" class="org.apache.log4j.net.SMTPAppender">
+		<param name="Threshold" value="ERROR" />
+		<param name="To" value="${log.mail.to}" />
+		<param name="From" value="${log.mail.from}" />
+		<param name="Subject" value="${log.mail.subject}" />
+		<param name="SMTPHost" value="${log.mail.smtphost}" />
+		<!-- 한글 처리 위해 -->
+		<param name="Charset" value="utf-8" />
+		<!-- maximum number of logging events to collect in a cyclic buffer. default 512 -->
+		<param name="BufferSize" value="100" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+		</layout>
+	</appender>
+
+
+	<logger name="sysoutLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="sysout" />
+	</logger>
+
+	<logger name="mdcLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="mdcFile" />
+	</logger>
+
+	<logger name="rollingLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="rollingFile" />
+	</logger>
+
+	<logger name="dailyLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="dailyRollingFile" />
+	</logger>
+
+	<logger name="dbLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="DB" />
+	</logger>
+
+	<logger name="egovDBLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="egovDB" />
+	</logger>
+
+	<logger name="pooledDBLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="pooledDB" />
+	</logger>
+
+	<!--
+		JMS appender 는 개발서버의 jeus 6 에 등록된 connectionFactory 로 비동기적으로 log
+		message 를 날림
+	-->
+	<logger name="jmsLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="jms" />
+	</logger>
+
+	<!--
+		remote 시스템에 있는 (여기서는 같은 Spring Container 에 loggerMDP bean 으로 올린)
+		consumer 는 was 의 JMS 큐를 모니터링 하고 있으면서 이벤트가 발생하면 해당 메시지를 consume 하여 처리
+		여기서는 loggerMDP 에서 지정한 별도의 파일 로거로 jms 메시지를 로그 기록하게 처리하였음.
+	-->
+	<logger name="jmsMessageConsumerLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="jmsMessageConsumerFile" />
+	</logger>
+
+	<logger name="socketLogger" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="socket" />
+	</logger>
+	
+	<logger name="mailLogger" additivity="false">
+		<level value="ERROR" />
+		<appender-ref ref="mail" />
+	</logger>
+
+
+
+	<logger name="egovframework" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLayoutSample"
+		additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLevelDebug"
+		additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLevelInfo"
+		additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLevelWarn"
+		additivity="false">
+		<level value="WARN" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLevelError"
+		additivity="false">
+		<level value="ERROR" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<logger name="egovframework.rte.fdl.logging.sample.LogLevelFatal"
+		additivity="false">
+		<level value="FATAL" />
+		<appender-ref ref="file" />
+	</logger>
+
+	<!-- log SQL with timing information, post execution -->
+	<logger name="jdbc.sqltiming" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<logger name="org.springframework" additivity="false">
+		<level value="OFF" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<root>
+		<level value="ERROR" />
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

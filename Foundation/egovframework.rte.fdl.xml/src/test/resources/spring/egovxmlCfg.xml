@@ -1,0 +1,15 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context   
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	
+	<context:property-placeholder location="classpath*:spring/egovxml.properties" />
+						
+	<bean id="xmlconfig" class="egovframework.rte.fdl.xml.XmlConfig">
+		<property name="xmlpath" value="${egovxmlsaved.path}" />
+	</bean>
+</beans> 

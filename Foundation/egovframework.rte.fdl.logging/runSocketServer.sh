@@ -1,0 +1,1 @@
+$JAVA_HOME/bin/java -classpath ./lib/log4j-1.3alpha-8-374949.jar org.apache.log4j.net.SimpleSocketServer 4448 ./remote/log4j.xml

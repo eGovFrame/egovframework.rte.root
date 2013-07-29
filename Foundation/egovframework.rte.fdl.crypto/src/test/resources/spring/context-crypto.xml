@@ -1,0 +1,39 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context   
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+
+	<bean id="cryptotool" class="egovframework.rte.fdl.crypto.EgovCryptoset">
+		<property name="cryptoBin" ref="cryptolerBin" />
+		<property name="cryptoBin1" ref="cryptolerBin1" />
+		<property name="cryptoTxt" ref="cryptolerTxt" />
+		<property name="cryptoTxt1" ref="cryptolerTxt1" />
+		<property name="cryptoPwd" ref="cryptolerPwd" />
+		<property name="cryptoNum" ref="cryptolerNum" />
+		<property name="cryptoNum1" ref="cryptolerNum1" />
+        <property name="cryptoAriaTxt" ref="cryptolerAriaTxt" />
+        <property name="cryptoAriaTxt1" ref="cryptolerAriaTxt1" />
+        <property name="cryptoAriaBin" ref="cryptolerAriaBin" />
+        <property name="cryptoAriaBin1" ref="cryptolerAriaBin1" />
+        <property name="cryptoAriaNum" ref="cryptolerAriaNum" />
+        <property name="cryptoAriaNum1" ref="cryptolerAriaNum1" />
+	</bean> 
+	<bean id="cryptolerBin" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionBinServlceImpl" />
+	<bean id="cryptolerBin1" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionBinServlceImpl" />
+	<bean id="cryptolerTxt" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionTxtServiceImpl" />
+	<bean id="cryptolerTxt1" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionTxtServiceImpl" />
+	<bean id="cryptolerPwd" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionPasswdServlceImpl" />
+	<bean id="cryptolerNum" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionNumServiceImpl" />
+	<bean id="cryptolerNum1" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionNumServiceImpl" />
+    <bean id="cryptolerAriaTxt" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionTxtServiceImpl" />
+    <bean id="cryptolerAriaTxt1" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionTxtServiceImpl" />
+    <bean id="cryptolerAriaBin" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionBinServiceImpl" />
+    <bean id="cryptolerAriaBin1" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionBinServiceImpl" />
+    <bean id="cryptolerAriaNum" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionNumServiceImpl" />
+    <bean id="cryptolerAriaNum1" class="egovframework.rte.fdl.crypto.impl.EgovARIAEDcryptionNumServiceImpl" />
+</beans>
+

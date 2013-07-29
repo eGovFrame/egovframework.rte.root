@@ -1,0 +1,17 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+       http://www.springframework.org/schema/context   
+       http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+	
+	<context:property-placeholder location="classpath*:spring/crypto_config.properties" />
+						
+	<bean id="config" class="egovframework.rte.fdl.crypto.CryptoConfig">
+		<property name="password" value="${crypto.password}" />
+		<property name="algorithm" value="${cyrpto.algorithm}" />
+		<property name="passwordAlgorithm" value="${crypto_password.algorithm}" />
+	</bean>
+</beans> 

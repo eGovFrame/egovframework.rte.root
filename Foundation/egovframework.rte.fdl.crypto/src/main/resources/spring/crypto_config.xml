@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+					http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	<bean id="password" class="java.lang.String">
+		<constructor-arg>
+			<value>N5h+Lz1rd/24YvL1KhV1pO0OSIc=</value>
+		</constructor-arg>
+	</bean>
+	<bean id="algorithm" class="java.lang.String">
+		<constructor-arg>
+			<value>PBEWithSHA1AndDESede</value>
+		</constructor-arg>
+	</bean>
+</beans>
