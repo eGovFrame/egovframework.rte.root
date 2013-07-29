@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="egovframework.rte.psl.dataaccess.EmpMapper">
+
+	<cache   
+		eviction="LRU"
+		flushInterval="600000"
+		size="1000"
+		readOnly="true" />
+	
+	<sql id="selectEmpReuse">
+		select EMP_NO,
+		EMP_NAME,
+		JOB,
+		MGR,
+		HIRE_DATE,
+		SAL,
+		COMM,
+		DEPT_NO
+		from EMP
+		<include refid="empWhereEmpNo"/>
+	</sql>
+
+	<sql id="empWhereEmpNo">
+		<where>
+			<if test="empNo != null">
+				EMP_NO = #{empNo}
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectEmpUsingCacheModelLRU" parameterType="egovframework.rte.psl.dataaccess.vo.EmpVO" resultMap="empResult">
+		<include refid="selectEmpReuse" />
+	</select>
+
+</mapper>
